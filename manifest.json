@@ -1,20 +1,20 @@
 {
   "name": "FartBoard",
   "short_name": "FartBoard",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/FartBoard/index.html",
+  "scope": "/FartBoard/",
   "display": "standalone",
-  "background_color": "#f0f2f5",
-  "theme_color": "#f0f2f5",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "images/icon-192.png",
+      "src": "/FartBoard/images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-512.png",
+      "src": "/FartBoard/images/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
