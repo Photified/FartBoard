@@ -40,26 +40,28 @@
             justify-content: center;
             width: 100%;
             max-width: 500px;
-            padding: 15px 20px 5px 20px;
+            padding: 10px 20px; /* Slightly reduced padding for the big logo */
             box-sizing: border-box;
         }
 
+        /* MASSIVE LOGO UPDATE */
         .logo { 
-            width: 90px; 
-            height: 90px; 
-            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));
+            width: 270px;  /* Tripled size (90px * 3) */
+            height: 270px; /* Tripled size */
+            /* Drop shadow filter removed completely */
         }
         
         /* Settings Gear Icon anchored to top right */
         .settings-btn {
             position: absolute;
             right: 20px;
-            top: 35px;
+            top: 30px; /* Adjusted slightly for new header padding */
             background: none;
             border: none;
             cursor: pointer;
             padding: 5px;
             transition: transform 0.2s;
+            z-index: 10; /* Ensure it sits on top of the big logo corner if needed */
         }
         .settings-btn:active { transform: rotate(45deg); }
         .settings-btn svg { width: 28px; height: 28px; fill: #b2bec3; }
@@ -70,11 +72,11 @@
             flex-direction: column;
             gap: 15px;
             width: 100%;
-            max-width: 450px; /* Widened to let the rectangular buttons breathe */
-            padding: 0 15px;
+            max-width: 450px;
+            padding: 0 15px 20px 15px; /* Added bottom padding just in case */
             box-sizing: border-box;
             flex-grow: 1;
-            justify-content: center;
+            justify-content: flex-start; /* Changed to top-align to sit under the big logo */
         }
 
         .bank {
@@ -100,9 +102,9 @@
             gap: 10px; 
         }
 
-        /* Premium Tactile Buttons (Now Rectangular) */
+        /* Premium Tactile Rectangular Buttons */
         button.pad { 
-            padding: 16px 0; /* Gives vertical thickness without forcing a square */
+            padding: 16px 0;
             font-size: 1.3rem; 
             font-weight: 800; 
             color: rgba(255, 255, 255, 0.9);
