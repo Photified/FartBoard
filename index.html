@@ -7,95 +7,79 @@
     <link rel="manifest" href="manifest.json">
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #2c3e50; color: white; padding: 20px; margin: 0; }
-        h1 { margin-bottom: 30px; font-size: 2.5rem; }
-        .section { margin: 20px auto; padding: 20px; background: #34495e; border-radius: 15px; max-width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        h1 { margin-bottom: 20px; font-size: 2.5rem; }
+        
+        .section { margin: 20px auto; padding: 20px; background: #34495e; border-radius: 15px; max-width: 450px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .section h2 { margin-top: 0; border-bottom: 2px solid #7f8c8d; padding-bottom: 10px; }
-        button { font-size: 1.2rem; margin: 10px; padding: 15px 30px; cursor: pointer; border: none; border-radius: 8px; width: 80%; font-weight: bold; transition: transform 0.1s; color: #333; }
-        button:active { transform: scale(0.95); }
+        
+        /* New grid layout for 5 buttons per section */
+        .button-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px; }
+        
+        button { font-size: 1.2rem; padding: 15px 0; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; transition: transform 0.1s; color: #333; width: 100%; }
+        button:active { transform: scale(0.90); }
         
         .btn-dry { background: #f1c40f; }
         .btn-wet { background: #3498db; color: white; }
         .btn-squeak { background: #1abc9c; color: white; }
-        .btn-loud { background: #e74c3c; color: white; font-size: 1.5rem; text-transform: uppercase; }
+        .btn-loud { background: #e74c3c; color: white; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-    <h1>💨 The Soundboard</h1>
+    <h1>💨 FartBoard</h1>
 
     <div class="section">
         <h2>Dry</h2>
-        <button class="btn-dry" onclick="playDry()">Standard Issue</button>
+        <div class="button-grid">
+            <button class="btn-dry" onclick="playSound('dry1')">1</button>
+            <button class="btn-dry" onclick="playSound('dry2')">2</button>
+            <button class="btn-dry" onclick="playSound('dry3')">3</button>
+            <button class="btn-dry" onclick="playSound('dry4')">4</button>
+            <button class="btn-dry" onclick="playSound('dry5')">5</button>
+        </div>
     </div>
 
     <div class="section">
         <h2>Wet</h2>
-        <button class="btn-wet" onclick="playWet()">Oh No...</button>
+        <div class="button-grid">
+            <button class="btn-wet" onclick="playSound('wet1')">1</button>
+            <button class="btn-wet" onclick="playSound('wet2')">2</button>
+            <button class="btn-wet" onclick="playSound('wet3')">3</button>
+            <button class="btn-wet" onclick="playSound('wet4')">4</button>
+            <button class="btn-wet" onclick="playSound('wet5')">5</button>
+        </div>
     </div>
 
     <div class="section">
         <h2>Squeak</h2>
-        <button class="btn-squeak" onclick="playSqueak()">The Mouse</button>
+        <div class="button-grid">
+            <button class="btn-squeak" onclick="playSound('squeak1')">1</button>
+            <button class="btn-squeak" onclick="playSound('squeak2')">2</button>
+            <button class="btn-squeak" onclick="playSound('squeak3')">3</button>
+            <button class="btn-squeak" onclick="playSound('squeak4')">4</button>
+            <button class="btn-squeak" onclick="playSound('squeak5')">5</button>
+        </div>
     </div>
 
     <div class="section">
         <h2>LOUD</h2>
-        <button class="btn-loud" onclick="playLoud()">Earthquake</button>
+        <div class="button-grid">
+            <button class="btn-loud" onclick="playSound('loud1')">1</button>
+            <button class="btn-loud" onclick="playSound('loud2')">2</button>
+            <button class="btn-loud" onclick="playSound('loud3')">3</button>
+            <button class="btn-loud" onclick="playSound('loud4')">4</button>
+            <button class="btn-loud" onclick="playSound('loud5')">5</button>
+        </div>
     </div>
 
     <script>
-        // Initialize Web Audio API
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        // Helper function to create sounds
-        function createSound(type, startFreq, endFreq, duration, volume = 1) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            osc.type = type;
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
-            const now = audioCtx.currentTime;
-            osc.frequency.setValueAtTime(startFreq, now);
-            osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
-
-            gainNode.gain.setValueAtTime(volume, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration);
-
-            osc.start(now);
-            osc.stop(now + duration);
+        // Instantly plays the sound file based on the name passed from the button
+        function playSound(fileName) {
+            const audio = new Audio(`sounds/${fileName}.mp3`);
+            audio.play();
         }
 
-        // Sound Profiles
-        function playDry() {
-            // Sawtooth wave dropping from 80hz to 40hz over 0.4 seconds
-            createSound('sawtooth', 80, 40, 0.4);
-        }
-
-        function playSqueak() {
-            // High pitched triangle wave dropping rapidly
-            createSound('triangle', 600, 200, 0.3);
-        }
-
-        function playLoud() {
-            // Deep, loud square wave that lasts longer
-            createSound('square', 60, 20, 0.8, 2.5); 
-        }
-
-        function playWet() {
-            // Wet is a rapid succession of short, low frequency "pops"
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            for(let i = 0; i < 6; i++) {
-                setTimeout(() => {
-                    createSound('sawtooth', 90, 40, 0.1);
-                }, i * 60); 
-            }
-        }
-
-        // Register Service Worker for PWA offline capabilities
+        // Service Worker for offline PWA capabilities
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
                 .then(() => console.log("Service Worker Registered"));
