@@ -2,88 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FartBoard</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        /* Color Palette and Variables */
+        /* Light Theme Variables */
         :root {
-            --bg-dark: #121212;
-            --panel-bg: #1e1e1e;
-            --dry-color: #f1c40f;
-            --dry-shadow: #c0392b;
-            --wet-color: #00cec9;
-            --wet-shadow: #0984e3;
+            --bg-color: #f0f2f5;
+            --text-color: #2d3436;
+            --panel-bg: #ffffff;
+            --dry-color: linear-gradient(135deg, #fad390, #e58e26);
+            --dry-shadow: #b7701e;
+            --wet-color: linear-gradient(135deg, #81ecec, #00cec9);
+            --wet-shadow: #009e9a;
         }
 
+        /* Prevent scrolling and zooming to feel like a native app */
         body { 
             font-family: 'Segoe UI', system-ui, sans-serif; 
-            text-align: center; 
-            background: var(--bg-dark); 
-            color: #ffffff; 
-            padding: 20px 10px; 
+            background: var(--bg-color); 
+            color: var(--text-color); 
             margin: 0; 
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow: hidden; 
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* Logo and Header Styling */
-        .logo {
-            width: 120px;
-            height: 120px;
-            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.5));
-            margin-bottom: -5px;
-        }
-        
-        h1 { 
-            margin-top: 0;
-            margin-bottom: 25px; 
-            font-size: 2.2rem; 
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #f5f6fa;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        
-        /* Soundboard Panel Styling */
-        .section { 
+        /* Header Area */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
-            max-width: 400px; 
-            margin-bottom: 30px; 
-            padding: 25px; 
-            background: var(--panel-bg); 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.05); 
+            max-width: 500px;
+            padding: 10px 20px;
             box-sizing: border-box;
         }
 
-        .section h2 { 
-            margin-top: 0; 
-            font-size: 1.5rem;
-            color: #a4b0be;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo { width: 50px; height: 50px; }
+        
+        h1 { 
+            font-size: 1.5rem; 
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        /* Settings Gear Icon */
+        .settings-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+        .settings-btn:active { transform: rotate(45deg); }
+        .settings-btn svg { width: 28px; height: 28px; fill: #636e72; }
+
+        /* Main Board Layout */
+        .board {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 15px;
+            box-sizing: border-box;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .bank {
+            background: var(--panel-bg);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .bank h2 {
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            color: #636e72;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-bottom: 2px solid #2f3542; 
-            padding-bottom: 12px; 
-            margin-bottom: 20px;
+            text-align: center;
         }
-        
-        /* 3x3 Grid for Perfect Square Pads */
+
+        /* Compact 3x3 Grid */
         .button-grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
-            gap: 15px; 
+            gap: 10px; 
         }
-        
-        /* 3D Hardware Button Styling */
-        button { 
-            aspect-ratio: 1 / 1; /* Makes the buttons perfect squares */
-            font-size: 2rem; 
+
+        /* Premium Tactile Buttons */
+        button.pad { 
+            aspect-ratio: 1 / 1; 
+            font-size: 1.5rem; 
             font-weight: 800; 
             color: rgba(255, 255, 255, 0.9);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             cursor: pointer; 
             border: none; 
             border-radius: 12px; 
@@ -92,78 +121,204 @@
             outline: none;
             -webkit-tap-highlight-color: transparent;
         }
-        
-        /* Dry Buttons - Yellow/Orange Theme */
+
         .btn-dry { 
             background: var(--dry-color); 
-            box-shadow: 0 8px 0 var(--dry-shadow), 0 12px 10px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.4);
+            box-shadow: 0 6px 0 var(--dry-shadow), 0 8px 10px rgba(0,0,0,0.15);
         }
         
         .btn-dry:active { 
-            transform: translateY(8px); 
-            box-shadow: 0 0px 0 var(--dry-shadow), 0 4px 4px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.4); 
-            background: #f39c12;
+            transform: translateY(6px); 
+            box-shadow: 0 0px 0 var(--dry-shadow), 0 2px 4px rgba(0,0,0,0.1); 
         }
 
-        /* Wet Buttons - Cyan/Blue Theme */
         .btn-wet { 
             background: var(--wet-color); 
-            box-shadow: 0 8px 0 var(--wet-shadow), 0 12px 10px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.4);
+            box-shadow: 0 6px 0 var(--wet-shadow), 0 8px 10px rgba(0,0,0,0.15);
         }
         
         .btn-wet:active { 
-            transform: translateY(8px); 
-            box-shadow: 0 0px 0 var(--wet-shadow), 0 4px 4px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.4);
-            background: #00b894;
+            transform: translateY(6px); 
+            box-shadow: 0 0px 0 var(--wet-shadow), 0 2px 4px rgba(0,0,0,0.1);
         }
+
+        /* Settings Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        .modal-content h2 { margin-top: 0; }
+        .setting-row { margin: 20px 0; text-align: left; }
+        .setting-row label { display: block; margin-bottom: 8px; font-weight: bold; color: #2d3436;}
+        input[type="range"] { width: 100%; }
+
+        .action-btn {
+            background: #2d3436; color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; font-size: 1rem; width: 100%; font-weight: bold;
+            cursor: pointer; margin-top: 10px;
+        }
+        .action-btn:active { background: #636e72; }
+        
+        #installBtn { background: #0984e3; display: none; margin-bottom: 10px; }
+        .close-btn { background: #d63031; margin-top: 20px;}
+
     </style>
 </head>
 <body>
 
-    <img src="images/icon-512.png" alt="FartBoard Logo" class="logo">
-    <h1>FartBoard</h1>
+    <div class="header">
+        <div class="brand">
+            <img src="images/icon-512.png" alt="Logo" class="logo">
+            <h1>FartBoard</h1>
+        </div>
+        <button class="settings-btn" onclick="toggleSettings()">
+            <svg viewBox="0 0 24 24">
+                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+            </svg>
+        </button>
+    </div>
 
-    <div class="section">
-        <h2>Dry Bank</h2>
-        <div class="button-grid">
-            <button class="btn-dry" onclick="playSound('dry1')">1</button>
-            <button class="btn-dry" onclick="playSound('dry2')">2</button>
-            <button class="btn-dry" onclick="playSound('dry3')">3</button>
-            <button class="btn-dry" onclick="playSound('dry4')">4</button>
-            <button class="btn-dry" onclick="playSound('dry5')">5</button>
-            <button class="btn-dry" onclick="playSound('dry6')">6</button>
-            <button class="btn-dry" onclick="playSound('dry7')">7</button>
-            <button class="btn-dry" onclick="playSound('dry8')">8</button>
-            <button class="btn-dry" onclick="playSound('dry9')">9</button>
+    <div class="board">
+        <div class="bank">
+            <h2>Dry Bank</h2>
+            <div class="button-grid">
+                <button class="pad btn-dry" onclick="playSound('dry1')">1</button>
+                <button class="pad btn-dry" onclick="playSound('dry2')">2</button>
+                <button class="pad btn-dry" onclick="playSound('dry3')">3</button>
+                <button class="pad btn-dry" onclick="playSound('dry4')">4</button>
+                <button class="pad btn-dry" onclick="playSound('dry5')">5</button>
+                <button class="pad btn-dry" onclick="playSound('dry6')">6</button>
+                <button class="pad btn-dry" onclick="playSound('dry7')">7</button>
+                <button class="pad btn-dry" onclick="playSound('dry8')">8</button>
+                <button class="pad btn-dry" onclick="playSound('dry9')">9</button>
+            </div>
+        </div>
+
+        <div class="bank">
+            <h2>Wet Bank</h2>
+            <div class="button-grid">
+                <button class="pad btn-wet" onclick="playSound('wet1')">1</button>
+                <button class="pad btn-wet" onclick="playSound('wet2')">2</button>
+                <button class="pad btn-wet" onclick="playSound('wet3')">3</button>
+                <button class="pad btn-wet" onclick="playSound('wet4')">4</button>
+                <button class="pad btn-wet" onclick="playSound('wet5')">5</button>
+                <button class="pad btn-wet" onclick="playSound('wet6')">6</button>
+                <button class="pad btn-wet" onclick="playSound('wet7')">7</button>
+                <button class="pad btn-wet" onclick="playSound('wet8')">8</button>
+                <button class="pad btn-wet" onclick="playSound('wet9')">9</button>
+            </div>
         </div>
     </div>
 
-    <div class="section">
-        <h2>Wet Bank</h2>
-        <div class="button-grid">
-            <button class="btn-wet" onclick="playSound('wet1')">1</button>
-            <button class="btn-wet" onclick="playSound('wet2')">2</button>
-            <button class="btn-wet" onclick="playSound('wet3')">3</button>
-            <button class="btn-wet" onclick="playSound('wet4')">4</button>
-            <button class="btn-wet" onclick="playSound('wet5')">5</button>
-            <button class="btn-wet" onclick="playSound('wet6')">6</button>
-            <button class="btn-wet" onclick="playSound('wet7')">7</button>
-            <button class="btn-wet" onclick="playSound('wet8')">8</button>
-            <button class="btn-wet" onclick="playSound('wet9')">9</button>
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            
+            <button id="installBtn" class="action-btn">Install App to Phone</button>
+
+            <div class="setting-row">
+                <label for="volumeSlider">Master Volume</label>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+            </div>
+
+            <button class="action-btn" onclick="stopAllSounds()">🛑 Stop All Sounds</button>
+            <button class="action-btn close-btn" onclick="toggleSettings()">Close</button>
         </div>
     </div>
 
     <script>
+        // --- AUDIO ENGINE ---
+        let currentVolume = 1;
+        let activeAudios = []; // Keep track of playing sounds so we can stop them
+
+        // Update volume when slider changes
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            currentVolume = e.target.value;
+        });
+
         function playSound(fileName) {
-            // Added error handling just in case a file is missing
             try {
                 const audio = new Audio(`sounds/${fileName}.mp3`);
-                audio.play().catch(e => console.error("Could not play sound:", e));
+                audio.volume = currentVolume;
+                activeAudios.push(audio);
+                
+                audio.play().catch(e => console.error("Audio error:", e));
+                
+                // Cleanup array when sound finishes
+                audio.onended = () => {
+                    activeAudios = activeAudios.filter(a => a !== audio);
+                };
             } catch (error) {
-                console.error("Audio error:", error);
+                console.error("File missing or blocked:", error);
             }
         }
 
+        function stopAllSounds() {
+            activeAudios.forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+            activeAudios = [];
+        }
+
+        // --- SETTINGS UI ---
+        function toggleSettings() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.toggle('active');
+        }
+
+        // --- PWA INSTALL LOGIC ---
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        // Browsers fire this event when the app meets the criteria to be installed
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // Prevent default browser prompt
+            deferredPrompt = e; // Save the event
+            installBtn.style.display = 'block'; // Show our custom install button
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt(); // Show the browser install prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('App Installed!');
+                    installBtn.style.display = 'none'; // Hide button after install
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // --- SERVICE WORKER ---
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
                 .then(() => console.log("Service Worker Registered"));
