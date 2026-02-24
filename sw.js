@@ -1,6 +1,6 @@
-const CACHE_NAME = 'fartboard-v3';
+const CACHE_NAME = 'fartboard-v4';
 
-// Every single file your app needs to work offline goes in this list
+// The exact list of files your app needs to work completely offline
 const urlsToCache = [
   './',
   './index.html',
@@ -14,6 +14,10 @@ const urlsToCache = [
   './sounds/dry3.mp3',
   './sounds/dry4.mp3',
   './sounds/dry5.mp3',
+  './sounds/dry6.mp3',
+  './sounds/dry7.mp3',
+  './sounds/dry8.mp3',
+  './sounds/dry9.mp3',
 
   // Wet Sounds
   './sounds/wet1.mp3',
@@ -21,30 +25,40 @@ const urlsToCache = [
   './sounds/wet3.mp3',
   './sounds/wet4.mp3',
   './sounds/wet5.mp3',
-
-  // Squeak Sounds
-  './sounds/squeak1.mp3',
-  './sounds/squeak2.mp3',
-  './sounds/squeak3.mp3',
-  './sounds/squeak4.mp3',
-  './sounds/squeak5.mp3',
-
-  // LOUD Sounds
-  './sounds/loud1.mp3',
-  './sounds/loud2.mp3',
-  './sounds/loud3.mp3',
-  './sounds/loud4.mp3',
-  './sounds/loud5.mp3'
+  './sounds/wet6.mp3',
+  './sounds/wet7.mp3',
+  './sounds/wet8.mp3',
+  './sounds/wet9.mp3'
 ];
 
 // Install Event: Saves all the files to the device
 self.addEventListener('install', event => {
+  self.skipWaiting(); // Forces the waiting service worker to become active immediately
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('FartBoard Cache Opened');
+        console.log('FartBoard Cache v4 Opened');
         return cache.addAll(urlsToCache);
       })
+  );
+});
+
+// Activate Event: Cleans up old caches when the app updates
+self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim()); // Forces the service worker to take control of the page immediately
+  
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
 
@@ -55,22 +69,8 @@ self.addEventListener('fetch', event => {
       .then(response => {
         // Return the cached file if found, otherwise fetch from the network
         return response || fetch(event.request);
+      }).catch(error => {
+        console.error("Failed to fetch:", event.request.url, error);
       })
-  );
-});
-
-// Activate Event: Cleans up old caches if you ever update the app
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
   );
 });
