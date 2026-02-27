@@ -8,9 +8,9 @@
     <style>
         /* Light Theme Variables - UPDATED */
         :root {
-            --bg-color: #ffffff; /* Main background is now solid white */
+            --bg-color: #ffffff;
             --text-color: #2d3436;
-            --panel-bg: #f0f2f5; /* Panels are now the soft grey color */
+            --panel-bg: #f0f2f5;
             --dry-color: linear-gradient(135deg, #fad390, #e58e26);
             --dry-shadow: #b7701e;
             --wet-color: linear-gradient(135deg, #81ecec, #00cec9);
@@ -44,10 +44,10 @@
             box-sizing: border-box;
         }
 
-        /* MASSIVE LOGO */
+        /* MASSIVE (BUT RESPONSIVE) LOGO */
         .logo { 
-            width: 270px;
-            height: 270px;
+            max-height: 22vh;
+            width: auto;
         }
         
         /* Settings Gear Icon anchored to top right */
@@ -76,13 +76,22 @@
             box-sizing: border-box;
             flex-grow: 1;
             justify-content: flex-start;
+            
+            /* Hidden Safety Scroll */
+            overflow-y: auto; 
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        /* Hides scrollbar in Chrome/Safari */
+        .board::-webkit-scrollbar {
+            display: none;
         }
 
         .bank {
             background: var(--panel-bg);
             padding: 12px 15px;
             border-radius: 16px;
-            /* Made shadow slightly softer for the grey background */
             box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), 0 4px 15px rgba(0,0,0,0.03);
         }
 
@@ -104,7 +113,7 @@
 
         /* Premium Tactile Rectangular Buttons */
         button.pad { 
-            padding: 16px 0;
+            padding: 2.5vh 0;
             font-size: 1.3rem; 
             font-weight: 800; 
             color: rgba(255, 255, 255, 0.9);
