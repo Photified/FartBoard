@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fartboard-v4';
+const CACHE_NAME = 'fartboard-v5';
 
 // The exact list of files your app needs to work completely offline
 const urlsToCache = [
