@@ -23,7 +23,7 @@
             background: var(--bg-color); 
             color: var(--text-color); 
             margin: 0; 
-            height: 100vh;
+            height: 100dvh; /* UPDATED: 100dvh prevents mobile toolbars from hiding bottom keys */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -72,20 +72,23 @@
             gap: 15px;
             width: 100%;
             max-width: 450px;
-            padding: 0 15px 20px 15px;
+            padding: 0 15px 40px 15px; /* UPDATED: Extra padding at the bottom */
             box-sizing: border-box;
             flex-grow: 1;
             justify-content: flex-start;
             
-            /* Hidden Safety Scroll */
+            /* UPDATED: Allows scrolling with a thin scrollbar */
             overflow-y: auto; 
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
+            scrollbar-width: thin; /* Firefox */
         }
 
-        /* Hides scrollbar in Chrome/Safari */
+        /* UPDATED: Visible scrollbar in Chrome/Safari */
         .board::-webkit-scrollbar {
-            display: none;
+            width: 6px;
+        }
+        .board::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.15);
+            border-radius: 10px;
         }
 
         .bank {
@@ -113,7 +116,8 @@
 
         /* Premium Tactile Rectangular Buttons */
         button.pad { 
-            padding: 2.5vh 0;
+            padding: 15px 0; /* UPDATED: Fixed padding instead of vh so they don't squish */
+            min-height: 70px; /* UPDATED: Minimum height forces a scroll on small screens */
             font-size: 1.3rem; 
             font-weight: 800; 
             color: rgba(255, 255, 255, 0.9);
